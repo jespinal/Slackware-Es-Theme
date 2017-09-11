@@ -1,0 +1,178 @@
+/* 
+    Document   : style.css
+    Created on : Aug 13, 2012, 9:30:34 AM
+    Author     : jespinal
+    Description: Slackware-Es CSS file
+*/
+
+root { 
+    display: block;
+}
+
+* {
+    padding: 0;
+    border: 0;
+    color: black;
+}
+
+.reveal {
+    border: 1px solid black;
+}
+
+.undecored {
+    color: black;
+    text-decoration: none;
+}
+
+.strong_border {
+    border: 2px solid black;
+}
+
+body {
+    background-image: url(../images/background.jpg);
+}
+
+#global_container {
+    width: 85%;
+    margin: 0 auto;
+    margin-top: 70px;
+}
+
+    #header_container {
+        height: 70px;
+        min-width: 975px;
+    }
+        #slogan {
+            width: 40%;
+            float: left;
+            font-weight: bold;
+            text-align: center;
+            background-color: white;
+            margin: 35px 0 0 70px;
+            padding: 5px 0 5px 0;
+        }
+
+	#slogan a {
+            text-decoration: none;
+	}
+
+        #logo {
+            float: right;
+            margin-right: 80px;
+            background-image: url(../images/slackware_traditional_website_logo.png);
+            width: 260px;
+            height: 66px;
+        }
+
+    #body_container {
+        min-width: 975px;
+        margin-top: 20px;
+        height: 768px;
+    }
+        #sidebar {
+            float:left;
+            width: 130px;
+            font-size: 13px;
+            font-weight: bold;
+            border-left: none;
+            border-right: none;
+        }
+
+            #sidebar span {
+                display: block;
+                padding: 10px 5px 10px 15px;
+                background-color: white;
+                text-decoration: underline;
+                width: auto;
+                border-left:2px;
+                border-left-style: solid;
+                border-right:2px;
+                border-right-style: solid;
+            }
+
+            #sidebar span.separator {
+                border: 0;
+                padding: 0;
+                display: block;
+                height: 5px;
+                background-color: transparent;
+                border-top: 2px;
+                border-bottom: 2px;
+                border-style: solid;
+            }
+            
+        #content {
+            float: left;
+            margin-left: 10px;
+            height: auto;
+            width: auto;
+            max-width: 85%;
+            min-width: 833px;
+            vertical-align: top;
+        }
+            .content_title {
+                padding: 5px 5px 5px 10px;
+                font-weight: bold;
+                background-color: white;
+                margin-bottom: 5px;
+                clear: both;
+            }
+            
+            .content_title a {
+                text-decoration: none;
+            }
+            
+            .content_date {
+                float: right;
+                width: 20%;
+                min-width: 170px;
+                padding: 5px;
+                font-weight: bold;
+                text-align: center;
+                font-size: 85%;
+            }
+            
+            .content_date,.content_body {
+                background-color: white;
+                display: inline;
+            }
+            
+            .content_body {
+                float: left;
+                padding: 10px;
+                width: 75%;
+                min-width: 615px;
+                margin-bottom: 20px;
+            }
+			
+			/* Security advisories archives links */
+            .content_body .security_lnk {
+				margin-left:20px;
+				display: inline-block;
+			}
+
+			.content_body ul {
+				padding: 20px;
+			}
+
+        .navigation {
+            font-size: 12px;
+            text-align: center;
+            width: 615px;
+            background-color: white;
+            clear: both;
+            margin: 0 auto;
+			margin-bottom: 40px;
+			float: left;
+        }
+        
+#footer_container {
+    text-align: center;
+    font-size: 10px;
+    width: 500px;
+    margin: 0 auto;
+    clear: both;
+	float:right;
+	background-color:white;
+	padding: 2px; 
+}
