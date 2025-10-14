@@ -1,0 +1,7 @@
+# Ignore the docs directory
+docs/
+# Ignore local tooling and outputs
+# (kept commented - tools/ is tracked for now)
+# Visual diff outputs
+visual-diff-output/
+visual-diff-output-slackware-com/

@@ -10,4 +10,7 @@ Tags: slackware, linux
 License: GPL
 
 */
-@import "css/style.css";
+/*
+ Main stylesheet is `css/style.css`. It is enqueued via `functions.php`.
+ The `@import` has been removed for performance and because styles are now enqueued.
+ */
