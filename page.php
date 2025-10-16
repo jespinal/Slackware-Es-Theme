@@ -7,7 +7,7 @@
                 <?php get_sidebar() ?>
             
             
-                <div id="content" class="">
+                <main id="content" class="" role="main">
                     
                     <?php while ( have_posts() ) : the_post(); ?>
                     
@@ -25,7 +25,7 @@
                     
                     <?php endwhile; ?>
                     
-                </div>
+                </main>
                 
             <!-- BODY_CONTAINER END -->    
             </div>

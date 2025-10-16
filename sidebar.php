@@ -1,5 +1,5 @@
                 <!-- SIDEBAR START -->
-                <div id="sidebar" class="strong_border">
+                <aside id="sidebar" class="strong_border" role="complementary">
                 <!-- SIDEBAR START -->
                     
                     <?php 
@@ -9,29 +9,38 @@
                         $laCategories = array();
                         
                         global $post;
-                        
-                        // List of categories of the current post
-                        foreach(get_the_category($post->ID) as $loCat) {
-                            $laCategories[] = $loCat->term_id;
+
+                        // List of categories of the current post (defensive)
+                        if ( isset( $post ) && function_exists( 'get_the_category' ) ) {
+                            $cats = get_the_category( $post->ID );
+                            if ( is_array( $cats ) ) {
+                                foreach( $cats as $loCat ) {
+                                    if ( isset( $loCat->term_id ) ) {
+                                        $laCategories[] = $loCat->term_id;
+                                    }
+                                }
+                            }
                         }
                     ?>
 
                     <!-- Noticias START -->
+                    <?php if ( $loNews && isset( $loNews->term_id ) ): ?>
                     <span>
-                        <!-- <a href="<?php echo get_category_link($loNews->term_id) ;?>" title="<?php echo $loNews->name; ?>"> -->
-                        <a href="<?php echo site_url($loNews->slug.'/') ;?>" title="<?php echo $loNews->name; ?>">
-                            <?php echo $loNews->name; ?>
+                        <?php $news_link = get_category_link( $loNews->term_id ); ?>
+                        <a href="<?php echo esc_url( $news_link ); ?>" title="<?php echo esc_attr( $loNews->name ); ?>">
+                            <?php echo esc_html( $loNews->name ); ?>
                         </a>
                     </span>
-                    <?php if(  is_home() 
-                            || is_category($loNews->term_id) 
-                            || (is_single() && in_array($loNews->term_id, $laCategories)) ): ?>
+                    <?php endif; ?>
+            <?php if ( $loNews && ( is_home() 
+                || ( isset( $loNews->term_id ) && is_category( $loNews->term_id ) ) 
+                || ( is_single() && in_array( $loNews->term_id, $laCategories ) ) ) ): ?>
                     <span class="separator"></span>
                     <?php endif; ?>
                     <!-- Noticias END -->
                                         
                 
-                    <?php foreach ( $laPages as $loPage ): ?>
+                    <?php if ( is_array( $laPages ) && count( $laPages ) ): foreach ( $laPages as $loPage ): ?>
                 
                     <?php if(is_page($loPage->ID)): ?>
                     <span class="separator"></span>
@@ -47,21 +56,23 @@
                     <span class="separator"></span>
                     <?php endif; ?>
                     
-                    <?php endforeach; ?>
+                    <?php endforeach; endif; ?>
                     
                     <!-- Tutoriales START -->
-                    <?php if(  is_category($loTut->term_id)
-                            || (is_single() && in_array($loTut->term_id, $laCategories))): ?>
+            <?php if ( $loTut && ( isset( $loTut->term_id ) && is_category( $loTut->term_id )
+                || ( is_single() && in_array( $loTut->term_id, $laCategories ) ) ) ): ?>
                     <span class="separator"></span>
                     <?php endif; ?>
+                    <?php if ( $loTut && isset( $loTut->term_id ) ): ?>
                     <span>
-                    <!-- <a href="<?php echo get_category_link($loTut->term_id) ;?>" title="<?php echo $loTut->name; ?>">-->
-                        <a href="<?php echo site_url($loTut->slug.'/') ;?>" title="<?php echo $loTut->name; ?>">
-                            <?php echo $loTut->name; ?>
+                        <?php $tut_link = get_category_link( $loTut->term_id ); ?>
+                        <a href="<?php echo esc_url( $tut_link ); ?>" title="<?php echo esc_attr( $loTut->name ); ?>">
+                            <?php echo esc_html( $loTut->name ); ?>
                         </a>
                     </span>
+                    <?php endif; ?>
                     <!-- Tutoriales END -->
                 
                 <!-- SIDEBAR END -->    
-                </div>
+                </aside>
                 <!-- SIDEBAR END -->
