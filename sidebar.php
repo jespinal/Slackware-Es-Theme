@@ -1,3 +1,12 @@
+                <?php
+                /**
+                 * Sidebar template
+                 *
+                 * Copyright (C) 2025 Pavel Espinal
+                 * Licensed under GNU General Public License v2 (or later)
+                 * https://www.gnu.org/licenses/gpl-2.0.html
+                 */
+                ?>
                 <!-- SIDEBAR START -->
                 <aside id="sidebar" class="strong_border" role="complementary">
                 <!-- SIDEBAR START -->

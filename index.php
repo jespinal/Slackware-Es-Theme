@@ -1,4 +1,12 @@
-<?php get_header() ?>
+<?php
+/**
+ * Index template
+ *
+ * Copyright (C) 2025 Pavel Espinal
+ * Licensed under GNU General Public License v2 (or later)
+ * https://www.gnu.org/licenses/gpl-2.0.html
+ */
+get_header(); ?>
 
             <!-- BODY_CONTAINER START -->
             <div id="body_container" class="">
