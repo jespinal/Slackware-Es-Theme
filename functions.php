@@ -8,7 +8,7 @@
  */
 
 if ( ! defined( 'SLACKWAREES_THEME_VERSION' ) ) {
-    define( 'SLACKWAREES_THEME_VERSION', '2.0.1' );
+    define( 'SLACKWAREES_THEME_VERSION', '2.0.2' );
 }
 
 if ( ! function_exists( 'slackwarees_setup' ) ) :
