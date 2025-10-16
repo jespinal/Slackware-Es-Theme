@@ -38,8 +38,9 @@ body {
     width: 85%;
     margin: 0 auto;
     margin-top: 70px;
-    /* -------------------------- */
+    /*
     border: 1px solid red;
+    */
 }
     #header_container {
         height: 80px;
