@@ -29,4 +29,4 @@ Contributions are welcome! If you'd like to improve this theme, please:
 3. Submit a pull request with a clear description of your updates.
 
 ## License
-This theme is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute it as per the license terms.
+This theme is licensed under the GNU General Public License v2 (or later). See the `LICENSE` file for details.
