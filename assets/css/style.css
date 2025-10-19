@@ -87,7 +87,7 @@ body {
     margin-top: 20px;
     min-width: 975px;
     /* This is not actually needed, but it's useful for vusial-debuggin pursposes */
-    height: 768px;
+    /* height: 768px; */
 }
     #sidebar {
         float:left;
@@ -122,11 +122,27 @@ body {
         border-style: solid;
     }
 
+    /* Note: menu items have 15px base padding */
+    #sidebar .menu-item-depth-1 { padding-left: calc(15px + 10px); }
+    #sidebar .menu-item-depth-2 { padding-left: calc(15px + 20px); }
+    #sidebar .menu-item-depth-3 { padding-left: calc(15px + 30px); }
+
+    #sidebar .menu-item-has-children {
+        padding-bottom: 0px;
+    }
+
+    #sidebar .menu-item-depth-1, .menu-item-depth-2, .menu-item-depth-3 {
+        padding-top: 2px;
+        padding-bottom: 2px;
+        font-weight: normal;
+        text-decoration: none;
+    }
+
     #content {
         float: left;
         margin-left: 10px;
         height: auto;
-        width: auto;
+        width: 100%;
         max-width: 88%;
         min-width: 833px;
         vertical-align: top;
@@ -170,7 +186,7 @@ body {
              */
             width: 77%;
             min-width: 640px;
-            margin-bottom: 20px;
+            margin-bottom: 5px;
         }
 
         /* Security advisories archives links */
@@ -181,6 +197,22 @@ body {
 
         .content_body ul {
             padding: 20px;
+        }
+
+        .content_body hr {
+            height: 1px;
+            background-color: black;
+        }
+
+        /* Pages: use full content width (no date column on pages) */
+        #content.page_content,
+        #content div.content_body.page_content {
+            width: 100%;
+        }
+
+        .content_body pre.preformatted {
+            font-family: monospace;
+            font-size: 13px;
         }
 
         .navigation {
@@ -197,10 +229,10 @@ body {
 #footer_container {
     text-align: center;
     font-size: 10px;
-    width: 500px;
+    width: auto;
     margin: 0 auto;
     clear: both;
-    float:right;
+    float: right;
     background-color:white;
-    padding: 2px;
+    padding: 2px 5px 2px 5px;
 }
