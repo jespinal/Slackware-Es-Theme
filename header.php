@@ -21,8 +21,33 @@
 
             <div id="header_container" class="">
                 <div id="slogan" class="strong_border">
-                    <a href="<?php echo esc_url( site_url() ); ?>"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></a>
-                    <!--  <?php bloginfo('description'); ?> -->
+                    <?php if ( is_front_page() || is_home() ) : ?>
+                        <a href="<?php echo esc_url( site_url() ); ?>"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></a>
+                    <?php else : ?>
+                        <?php
+                        $title = '';
+                        if ( is_singular() ) {
+                            $title = single_post_title( '', false );
+                        } elseif ( is_category() ) {
+                            $title = single_cat_title( '', false );
+                        } elseif ( is_tag() ) {
+                            $title = single_tag_title( '', false );
+                        } elseif ( is_tax() ) {
+                            $title = single_term_title( '', false );
+                        } elseif ( is_post_type_archive() ) {
+                            $title = post_type_archive_title( '', false );
+                        } elseif ( is_archive() ) {
+                            $title = get_the_archive_title();
+                        } elseif ( is_search() ) {
+                            $title = sprintf( __( 'Search: %s', 'slackwarees' ), get_search_query() );
+                        } elseif ( is_404() ) {
+                            $title = __( 'Not Found', 'slackwarees' );
+                        } else {
+                            $title = wp_get_document_title();
+                        }
+                        ?>
+                        <span><?php echo esc_html( $title ); ?></span>
+                    <?php endif; ?>
                 </div>
                 <div id="logo" class="strong_border">
                 </div>
