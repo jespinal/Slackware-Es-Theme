@@ -22,7 +22,7 @@
             <div id="header_container" class="">
                 <div id="slogan" class="strong_border">
                     <?php if ( is_front_page() || is_home() ) : ?>
-                        <a href="<?php echo esc_url( site_url() ); ?>"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></a>
+                        <h1><a href="<?php echo esc_url( site_url() ); ?>"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></a></h1>
                     <?php else : ?>
                         <?php
                         $title = '';
@@ -46,7 +46,7 @@
                             $title = wp_get_document_title();
                         }
                         ?>
-                        <span><?php echo esc_html( $title ); ?></span>
+                        <h1><?php echo esc_html( $title ); ?></h1>
                     <?php endif; ?>
                 </div>
                 <div id="logo" class="strong_border">

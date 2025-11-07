@@ -56,6 +56,16 @@ body {
             padding: 5px 0 5px 0;
         }
 
+        #slogan h1 {
+            /* Make h1 behave like inline text (no block spacing, inherit font) */
+            display: inline;
+            font-size: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+            margin: 0;
+            padding: 0;
+        }
+
         #slogan a {
             text-decoration: none;
         }
