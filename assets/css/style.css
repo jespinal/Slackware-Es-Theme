@@ -58,12 +58,12 @@ body {
 
         #slogan h1 {
             /* Make h1 behave like inline text (no block spacing, inherit font) */
-            display: inline;
-            font-size: inherit;
-            font-weight: inherit;
-            line-height: inherit;
-            margin: 0;
-            padding: 0;
+            display: inline !important;
+            font-size: inherit !important;
+            font-weight: inherit !important;
+            line-height: inherit !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         #slogan a {
