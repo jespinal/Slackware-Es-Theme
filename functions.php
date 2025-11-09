@@ -55,8 +55,15 @@ function slackwarees_enqueue_assets() {
 add_action( 'wp_enqueue_scripts', 'slackwarees_enqueue_assets' );
 
 /**
- * Custom walker to render sidebar menu items as <span><a>..</a></span> and
- * insert a separator span after the current item, to mimic legacy markup.
+ * Custom walker to render sidebar menu items with legacy markup and custom field support.
+ *
+ * Features:
+ * - Renders items as <span><a>...</a></span>
+ * - Inserts visual separators around active sections
+ * - Supports hierarchical content via 'parent_page_id' custom field
+ * - Controls submenu visibility based on active branch
+ *
+ * @see docs/2025-11-09-010617-custom-field-menu-activation-solution.md
  */
 class SlackwareES_Sidebar_Span_Walker extends Walker_Nav_Menu {
     // Track top-level item index and a pending post-current separator
@@ -157,6 +164,39 @@ class SlackwareES_Sidebar_Span_Walker extends Walker_Nav_Menu {
     public function start_lvl( &$output, $depth = 0, $args = null ) {}
     public function end_lvl( &$output, $depth = 0, $args = null ) {}
 
+    /**
+     * Get CSS classes to add for custom field active items.
+     *
+     * @param object $item Menu item object.
+     * @return array CSS classes to add.
+     */
+    protected function get_custom_field_classes( $item ) {
+        global $post;
+        
+        if ( ! isset( $post->ID ) || ! isset( $item->object_id ) ) {
+            return array();
+        }
+        
+        $parent_page_id = get_post_meta( $post->ID, 'parent_page_id', true );
+        
+        if ( empty( $parent_page_id ) ) {
+            return array();
+        }
+        
+        $is_direct_match = ( (int) $parent_page_id === (int) $item->object_id );
+        
+        if ( $is_direct_match ) {
+            return array( 'current-menu-item', 'current_page_item' );
+        } else {
+            return array(
+                'current-menu-ancestor',
+                'current-menu-parent',
+                'current_page_ancestor',
+                'current_page_parent'
+            );
+        }
+    }
+
     public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
         $title = isset( $item->title ) ? $item->title : '';
         $url   = isset( $item->url ) ? $item->url : '';
@@ -248,27 +288,8 @@ class SlackwareES_Sidebar_Span_Walker extends Walker_Nav_Menu {
         
         // If this item is active due to custom field, add the appropriate classes
         if ( $custom_field_active ) {
-            // Check if this is the direct match or an ancestor
-            $is_direct_match = false;
-            global $post;
-            if ( isset( $post->ID ) ) {
-                $parent_page_id = get_post_meta( $post->ID, 'parent_page_id', true );
-                if ( ! empty( $parent_page_id ) && isset( $item->object_id ) && (int) $parent_page_id === (int) $item->object_id ) {
-                    $is_direct_match = true;
-                }
-            }
-            
-            if ( $is_direct_match ) {
-                // This is the direct match (the page specified in parent_page_id)
-                $span_classes[] = 'current-menu-item';
-                $span_classes[] = 'current_page_item';
-            } else {
-                // This is an ancestor of the matched item
-                $span_classes[] = 'current-menu-ancestor';
-                $span_classes[] = 'current-menu-parent';
-                $span_classes[] = 'current_page_ancestor';
-                $span_classes[] = 'current_page_parent';
-            }
+            $custom_classes = $this->get_custom_field_classes( $item );
+            $span_classes = array_merge( $span_classes, $custom_classes );
         }
         
         $class_attr = implode( ' ', array_map( 'esc_attr', $span_classes ) );
