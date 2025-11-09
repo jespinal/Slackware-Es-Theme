@@ -112,6 +112,31 @@ class SlackwareES_Sidebar_Span_Walker extends Walker_Nav_Menu {
         }
     }
 
+    // Check for custom field relationship: if the current post/page has a
+    // 'parent_page_id' custom field pointing to this menu item's object,
+    // mark this item as active. This allows posts not in the menu to
+    // activate their conceptual parent section.
+    if ( ! $has_current_marker ) {
+        global $post;
+        if ( isset( $post->ID ) ) {
+            $parent_page_id = get_post_meta( $post->ID, 'parent_page_id', true );
+            if ( ! empty( $parent_page_id ) && isset( $item->object_id ) ) {
+                // Direct match: the custom field points to this menu item
+                if ( (int) $parent_page_id === (int) $item->object_id ) {
+                    $has_current_marker = true;
+                }
+                // Hierarchical match: check if this menu item is an ancestor
+                // of the page specified in the custom field (for nested menus)
+                elseif ( 'page' === $item->object ) {
+                    $ancestors = get_post_ancestors( $parent_page_id );
+                    if ( in_array( (int) $item->object_id, $ancestors, true ) ) {
+                        $has_current_marker = true;
+                    }
+                }
+            }
+        }
+    }
+
     // On home/front, treat the first top-level item as the default section for
     // separator purposes (without affecting CSS classes).
     $is_home_default = ( 0 === (int) $depth && 0 === $this->top_index && ( is_home() || is_front_page() ) );
