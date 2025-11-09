@@ -73,11 +73,85 @@ class SlackwareES_Sidebar_Span_Walker extends Walker_Nav_Menu {
      * @var array
      */
     protected $display_children = array();
+    
+    /**
+     * Cache of menu item IDs that should be marked as active due to custom field relationships.
+     * Populated once per menu render to avoid repeated lookups.
+     *
+     * @var array
+     */
+    protected $custom_active_items = array();
 
     public function __construct() {
         // Allow top-level items to be displayed by default.
         $this->display_children = array();
         $this->display_children[0] = true;
+        
+        // Pre-calculate which menu items should be active based on custom fields
+        $this->calculate_custom_active_items();
+    }
+    
+    /**
+     * Pre-calculate which menu items should be marked as active based on
+     * the current post's 'parent_page_id' custom field.
+     */
+    protected function calculate_custom_active_items() {
+        global $post;
+        
+        if ( ! isset( $post->ID ) ) {
+            return;
+        }
+        
+        $parent_page_id = get_post_meta( $post->ID, 'parent_page_id', true );
+        
+        if ( empty( $parent_page_id ) ) {
+            return;
+        }
+        
+        // Get all menu items for the sidebar location
+        $locations = get_nav_menu_locations();
+        if ( ! isset( $locations['sidebar'] ) ) {
+            return;
+        }
+        
+        $menu_items = wp_get_nav_menu_items( $locations['sidebar'] );
+        
+        if ( ! $menu_items ) {
+            return;
+        }
+        
+        // Find the menu item that matches our parent_page_id
+        foreach ( $menu_items as $menu_item ) {
+            if ( isset( $menu_item->object_id ) && (int) $menu_item->object_id === (int) $parent_page_id ) {
+                // Mark this item as active (cast to int to ensure type consistency)
+                $this->custom_active_items[] = (int) $menu_item->ID;
+                
+                // Also mark all its ancestors as active (for nested menus)
+                $current_ancestor_id = (int) $menu_item->menu_item_parent;
+                while ( $current_ancestor_id > 0 ) {
+                    if ( ! in_array( $current_ancestor_id, $this->custom_active_items, true ) ) {
+                        $this->custom_active_items[] = (int) $current_ancestor_id;
+                    }
+                    
+                    // Find the ancestor menu item to get its parent
+                    $found_ancestor = false;
+                    foreach ( $menu_items as $potential_ancestor ) {
+                        if ( (int) $potential_ancestor->ID === (int) $current_ancestor_id ) {
+                            $current_ancestor_id = (int) $potential_ancestor->menu_item_parent;
+                            $found_ancestor = true;
+                            break;
+                        }
+                    }
+                    
+                    // If we didn't find the ancestor or it has no parent, stop
+                    if ( ! $found_ancestor || $current_ancestor_id === 0 ) {
+                        break;
+                    }
+                }
+                
+                break;
+            }
+        }
     }
 
     public function start_lvl( &$output, $depth = 0, $args = null ) {}
@@ -112,29 +186,12 @@ class SlackwareES_Sidebar_Span_Walker extends Walker_Nav_Menu {
         }
     }
 
-    // Check for custom field relationship: if the current post/page has a
-    // 'parent_page_id' custom field pointing to this menu item's object,
-    // mark this item as active. This allows posts not in the menu to
-    // activate their conceptual parent section.
-    if ( ! $has_current_marker ) {
-        global $post;
-        if ( isset( $post->ID ) ) {
-            $parent_page_id = get_post_meta( $post->ID, 'parent_page_id', true );
-            if ( ! empty( $parent_page_id ) && isset( $item->object_id ) ) {
-                // Direct match: the custom field points to this menu item
-                if ( (int) $parent_page_id === (int) $item->object_id ) {
-                    $has_current_marker = true;
-                }
-                // Hierarchical match: check if this menu item is an ancestor
-                // of the page specified in the custom field (for nested menus)
-                elseif ( 'page' === $item->object ) {
-                    $ancestors = get_post_ancestors( $parent_page_id );
-                    if ( in_array( (int) $item->object_id, $ancestors, true ) ) {
-                        $has_current_marker = true;
-                    }
-                }
-            }
-        }
+    // Check if this item was marked as active by our custom field logic
+    // Do this check regardless of $has_current_marker to handle all cases
+    $custom_field_active = false;
+    if ( in_array( $item->ID, $this->custom_active_items, true ) ) {
+        $has_current_marker = true;
+        $custom_field_active = true;
     }
 
     // On home/front, treat the first top-level item as the default section for
@@ -186,6 +243,31 @@ class SlackwareES_Sidebar_Span_Walker extends Walker_Nav_Menu {
                 if ( ! empty( $class ) && $class !== 'menu-item' ) {
                     $span_classes[] = $class;
                 }
+            }
+        }
+        
+        // If this item is active due to custom field, add the appropriate classes
+        if ( $custom_field_active ) {
+            // Check if this is the direct match or an ancestor
+            $is_direct_match = false;
+            global $post;
+            if ( isset( $post->ID ) ) {
+                $parent_page_id = get_post_meta( $post->ID, 'parent_page_id', true );
+                if ( ! empty( $parent_page_id ) && isset( $item->object_id ) && (int) $parent_page_id === (int) $item->object_id ) {
+                    $is_direct_match = true;
+                }
+            }
+            
+            if ( $is_direct_match ) {
+                // This is the direct match (the page specified in parent_page_id)
+                $span_classes[] = 'current-menu-item';
+                $span_classes[] = 'current_page_item';
+            } else {
+                // This is an ancestor of the matched item
+                $span_classes[] = 'current-menu-ancestor';
+                $span_classes[] = 'current-menu-parent';
+                $span_classes[] = 'current_page_ancestor';
+                $span_classes[] = 'current_page_parent';
             }
         }
         
