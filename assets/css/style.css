@@ -208,8 +208,10 @@ body {
             display: inline-block;
         }
 
-        .content_body ul {
+        .content_body ul,
+        .content_body ol {
             padding: 20px;
+            margin-left: 20px;
         }
 
         .content_body hr {
