@@ -56,6 +56,12 @@ body {
             padding: 5px 0 5px 0;
         }
 
+        @media (max-width: 900px) {
+            #slogan {
+                width: 55% !important;
+            }
+        }
+
         #slogan h1 {
             /* Make h1 behave like inline text (no block spacing, inherit font).
              * Be explicit about font-size to override any external rules that
@@ -200,6 +206,18 @@ body {
             width: 77%;
             min-width: 640px;
             margin-bottom: 5px;
+        }
+
+        /* Responsive: cellphones and tablets */
+        @media (max-width: 900px) {
+            .content_body {
+                width: 70% !important;
+            }
+
+            /* Exclude .page_content */
+            .content_body.page_content {
+                width: 100% !important;
+            }
         }
 
         /* Security advisories archives links */
